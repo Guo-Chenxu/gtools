@@ -14,6 +14,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/hertz-contrib/cors"
 )
 
 func main() {
@@ -22,7 +23,16 @@ func main() {
 	dal.Init()
 
 	h := server.Default(server.WithHostPorts(conf.GetConfig().Server.Port))
-	h.Use(recovery.Recovery(recovery.WithRecoveryHandler(RecoveryHandler)))
+	h.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{"PUT", "PATCH", "POST", "GET", "DELETE", "HEAD", "OPTIONS"},
+		AllowHeaders: []string{"Origin", "Authorization", "Content-Type", "Content-Length", "Accept", "X-Requested-With"},
+		// ExposeHeaders: []string{"Content-Type"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return true
+		}}),
+		recovery.Recovery(recovery.WithRecoveryHandler(RecoveryHandler)))
 	register(h)
 	h.Spin()
 }
