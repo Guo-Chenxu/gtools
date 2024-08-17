@@ -1,0 +1,20 @@
+CREATE TABLE `visitor_info_chenxutalk_top` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `success` tinyint(1) NOT NULL,
+    `time` datetime NOT NULL,
+    `week` varchar(10) NOT NULL,
+    `ip` varchar(20) NOT NULL,
+    `location` varchar(50) NOT NULL,
+    `browser` varchar(50) NOT NULL,
+    `browser_ver` varchar(20) NOT NULL,
+    `system` varchar(50) NOT NULL,
+    `low` varchar(10) NOT NULL,
+    `high` varchar(10) NOT NULL,
+    `tq` varchar(20) NOT NULL,
+    `fl` varchar(10) NOT NULL,
+    `tip` varchar(100) NOT NULL,
+    `fengxiang` varchar(20) NOT NULL,
+    `path` varchar(255) NOT NULL,
+    `domain` varchar(50) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

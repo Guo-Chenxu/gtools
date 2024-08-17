@@ -1,0 +1,22 @@
+# 服务器配置
+server:
+  port: ":39880"
+  name: "gtools_server"
+
+# 日志配置
+logger:
+  log_path: "./logs/system"
+  log_level: "debug"
+
+# redis
+redis:
+  addr: 127.0.0.1:6379
+  username: 
+  password: REDIS_PASSWORD
+
+# mysql
+mysql:
+  addr: 127.0.0.1:3306
+  username: root
+  password: MYSQL_PASSWORD
+  database: gtools
