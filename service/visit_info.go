@@ -18,6 +18,11 @@ func AddVisitorInfo(ctx context.Context, req *gtools.AddVisitorInfoReq) *consts.
 	return mysql.NewVisitInfoDao().InsertVisitorInfo(ctx, tableName, convertVisitorInfo(req))
 }
 
+func CountVisitorByPath(ctx context.Context, req *gtools.CountVisitorReq) (int64, *consts.BizCode) {
+	tableName := fmt.Sprintf(consts.VisitorInfoMySQLTablePrefix, strings.Replace(req.Domain, ".", "_", -1))   
+	return mysql.NewVisitInfoDao().CountVisitorByPath(ctx, tableName, req.Path)
+}
+
 func convertVisitorInfo(req *gtools.AddVisitorInfoReq) *mysql.VisitorInfo {
 	return &mysql.VisitorInfo{
 		Success:    req.Success,

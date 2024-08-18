@@ -27,7 +27,6 @@ func main() {
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{"PUT", "PATCH", "POST", "GET", "DELETE", "HEAD", "OPTIONS"},
 		AllowHeaders: []string{"Origin", "Authorization", "Content-Type", "Content-Length", "Accept", "X-Requested-With"},
-		// ExposeHeaders: []string{"Content-Type"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
 			return true

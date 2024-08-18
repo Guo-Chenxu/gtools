@@ -118,3 +118,8 @@ func _sendemailMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _countvisitorbypathMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

@@ -48,7 +48,19 @@ struct AddVisitorInfoResp {
     3: bool data
 }
 
+struct CountVisitorReq{
+    1: string domain
+    2: string path
+}
+
+struct CountVisitorResp {
+    1: i32 code
+    2: string msg
+    3: i64 data
+}
+
 service ToolsHandler {
     SendEmailResp SendEmail(1: SendEmailReq req) (api.post="/api/tools/send_email")
     AddVisitorInfoResp AddVisitorInfo(1: AddVisitorInfoReq req) (api.post="/api/tools/add_visitor_info")
+    CountVisitorResp CountVisitorByPath(1: CountVisitorReq req) (api.get="/api/tools/count_visitor_by_path")
 }

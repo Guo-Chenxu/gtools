@@ -56,3 +56,26 @@ func AddVisitorInfo(ctx context.Context, c *app.RequestContext) {
 	resp.Code, resp.Msg, resp.Data = consts.ResSuccess.Code, consts.ResSuccess.Msg, true
 	base.SuccessResponse(c, resp)
 }
+
+// CountVisitorByPath .
+// @router /api/tools/count_visitor_by_path [GET]
+func CountVisitorByPath(ctx context.Context, c *app.RequestContext) {
+	base := handler.BaseHandler{}
+	var err error
+	var req gtools.CountVisitorReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		base.ErrorResponse(ctx, c, &consts.ParamBindJsonError, nil)
+		return
+	}
+
+	resp := new(gtools.CountVisitorResp)
+	cnt, bizErr := service.CountVisitorByPath(ctx, &req)
+	if bizErr != nil {
+		base.ErrorResponse(ctx, c, bizErr, false)
+		return
+	}
+
+	resp.Code, resp.Msg, resp.Data = consts.ResSuccess.Code, consts.ResSuccess.Msg, cnt
+	base.SuccessResponse(c, resp)
+}

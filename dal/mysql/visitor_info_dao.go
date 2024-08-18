@@ -51,3 +51,9 @@ func (visitInfoDao *VisitorInfoDao) InsertVisitorInfo(ctx context.Context, table
 	}
 	return nil
 }
+
+func (visitInfoDao *VisitorInfoDao) CountVisitorByPath(ctx context.Context, tableName, path string) (int64, *consts.BizCode) {
+	var cnt int64
+	mysqlClient.Debug().Table(tableName).Where("path = ?", path).Count(&cnt)
+	return cnt, nil
+}
