@@ -8,7 +8,7 @@ import (
 )
 
 func TimeSub(t time.Time) string {
-	return fmt.Sprintf("%.4f s", time.Now().Sub(t).Seconds())
+	return fmt.Sprintf("%.4f s", time.Since(t).Seconds())
 }
 
 func ParseTime(t, format string) time.Time {

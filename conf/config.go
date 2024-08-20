@@ -89,7 +89,7 @@ func GetMysql() Mysql {
 func TestInit() {
 	// 绝对路径
 	dirPath, _ := getProjectPath()
-	filePath := fmt.Sprintf("./conf/config_dev.yaml")
+	filePath := "./conf/config_dev.yaml"
 	configPath := filepath.Join(dirPath, filePath)
 	hlog.Info("read config from ", configPath)
 	dataBytes, err := os.ReadFile(configPath)
@@ -128,7 +128,4 @@ func getProjectPath() (string, error) {
 			return "", fmt.Errorf("无法找到项目根目录")
 		}
 	}
-
-	// 不应达到这里，但为了编译器的满意度，返回一个空字符串
-	return "", nil
 }

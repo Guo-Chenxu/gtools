@@ -29,7 +29,7 @@ func SendEmail(ctx context.Context, req *gtools.SendEmailReq) *consts.BizCode {
 	}
 	if err != nil {
 		hlog.CtxInfof(ctx, "send email failed, err: %v", err)
-		return &consts.BizCode{consts.SendEmailError.Code, consts.SendEmailError.Msg}
+		return &consts.BizCode{Code: consts.SendEmailError.Code, Msg: consts.SendEmailError.Msg}
 	}
 	return nil
 }
