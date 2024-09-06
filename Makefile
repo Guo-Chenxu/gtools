@@ -11,7 +11,7 @@ server:
 test:
 	go test $(path) -v
 test_func:
-	go test $(path) -v -run $(func)
+	go test ./... -v -run $(func)
 
 SERVER = guochenxu@guochenxu-server
 # COMMAND = 'cd /home/guochenxu/gtools && bash start.sh'
