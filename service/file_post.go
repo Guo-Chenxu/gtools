@@ -23,5 +23,5 @@ func FilePost(ctx context.Context, req *gtools.FilePostReq) (string, *consts.Biz
 		hlog.Errorf("FilePost err: %+v", err)
 		return "", &consts.SystemErr
 	}
-	return uid, nil
+	return fmt.Sprintf("%s%s%s", consts.PostFileBaseUrl, uid, ext), nil
 }
