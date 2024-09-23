@@ -20,3 +20,5 @@ mysql:
   username: root
   password: MYSQL_PASSWORD
   database: gtools
+
+strore_path: "./" 

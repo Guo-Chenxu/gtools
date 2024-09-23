@@ -4,6 +4,7 @@ package gtools
 
 import (
 	"context"
+	"io"
 
 	"gtools/biz/handler"
 	gtools "gtools/biz/model/gtools"
@@ -77,5 +78,40 @@ func CountVisitorByPath(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp.Code, resp.Msg, resp.Data = consts.ResSuccess.Code, consts.ResSuccess.Msg, cnt
+	base.SuccessResponse(c, resp)
+}
+
+// FilePost .
+// @router /api/tools/file_post [POST]
+func FilePost(ctx context.Context, c *app.RequestContext) {
+	base := handler.BaseHandler{}
+	var err error
+
+	fileHeader, err := c.Request.FormFile("file")
+	if err != nil {
+		base.ErrorResponse(ctx, c, &consts.ParamBindJsonError, nil)
+		return
+	}
+	file, _ := fileHeader.Open()
+	defer file.Close()
+
+	tmpFile, err := io.ReadAll(file)
+	if err != nil {
+		base.ErrorResponse(ctx, c, &consts.ParamBindJsonError, nil)
+		return
+	}
+
+	req := gtools.FilePostReq{
+		Filename: fileHeader.Filename,
+		File:     tmpFile,
+	}
+	resp := new(gtools.FilePostResp)
+	url, bizErr := service.FilePost(ctx, &req)
+	if bizErr != nil {
+		base.ErrorResponse(ctx, c, bizErr, false)
+		return
+	}
+
+	resp.Code, resp.Msg, resp.Data = consts.ResSuccess.Code, consts.ResSuccess.Msg, url
 	base.SuccessResponse(c, resp)
 }

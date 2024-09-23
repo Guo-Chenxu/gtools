@@ -43,14 +43,17 @@ func ReqRespLogMiddleware() app.HandlerFunc {
 			req.Params = string(params)
 		}
 		if method == "POST" {
-			body := c.Request.Body()
-			req.Params = string(body)
+			if req.Route != "/api/tools/file_post" {
+				body := c.Request.Body()
+				req.Params = string(body)
+			} else {
+				req.Params = "this is a file"
+			}
 		}
-		// 打印请求信息
-		hlog.CtxInfof(ctx, "Request rout:%s, Method:%s, RequestBody:%s", req.Route, method, req.Params)
-		// 执行请求处理程序和其他中间件函数
+
+		hlog.CtxInfof(ctx, "Request route:%s, Method:%s, RequestBody:%s", req.Route, method, req.Params)
 		c.Next(ctx)
-		hlog.CtxInfof(ctx, "Response rout:%v, code:%v, cost:%v", req.Route, c.Response.StatusCode(), utils.TimeSub(beginAt))
+		hlog.CtxInfof(ctx, "Response route:%v, code:%v, cost:%v", req.Route, c.Response.StatusCode(), utils.TimeSub(beginAt))
 	}
 }
 
@@ -120,6 +123,11 @@ func _sendemailMw() []app.HandlerFunc {
 }
 
 func _countvisitorbypathMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _filepostMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }

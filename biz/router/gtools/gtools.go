@@ -23,6 +23,7 @@ func Register(r *server.Hertz) {
 			_tools := _api.Group("/tools", _toolsMw()...)
 			_tools.POST("/add_visitor_info", append(_addvisitorinfoMw(), gtools.AddVisitorInfo)...)
 			_tools.GET("/count_visitor_by_path", append(_countvisitorbypathMw(), gtools.CountVisitorByPath)...)
+			_tools.POST("/file_post", append(_filepostMw(), gtools.FilePost)...)
 			_tools.POST("/send_email", append(_sendemailMw(), gtools.SendEmail)...)
 		}
 	}

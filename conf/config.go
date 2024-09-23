@@ -12,10 +12,11 @@ import (
 var conf Config
 
 type Config struct {
-	Server Server `yaml:"server"`
-	Logger Logger `yaml:"logger"`
-	Redis  Redis  `yaml:"redis"`
-	Mysql  Mysql  `yaml:"mysql"`
+	Server    Server `yaml:"server"`
+	Logger    Logger `yaml:"logger"`
+	Redis     Redis  `yaml:"redis"`
+	Mysql     Mysql  `yaml:"mysql"`
+	StorePath string `yaml:"store_path"`
 }
 
 type Server struct {
@@ -60,7 +61,7 @@ func InitConfig() {
 	if err = yaml.Unmarshal(dataBytes, &conf); err != nil {
 		panic("conf.yaml配置文件读取失败:" + err.Error())
 	}
-	
+
 	readConfigFromEnv()
 	hlog.Infof("config = %+v", conf)
 }

@@ -20,3 +20,5 @@ mysql:
   username: root
   password: MYSQL_PASSWORD
   database: gtools
+
+store_path: "/home/guochenxu/files"

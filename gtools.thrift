@@ -59,8 +59,20 @@ struct CountVisitorResp {
     3: i64 data
 }
 
+struct FilePostReq{
+    1: string filename
+    2: binary file (api.form="file")
+}
+
+struct FilePostResp{
+    1: i32 code
+    2: string msg
+    3: string data
+}
+
 service ToolsHandler {
     SendEmailResp SendEmail(1: SendEmailReq req) (api.post="/api/tools/send_email")
     AddVisitorInfoResp AddVisitorInfo(1: AddVisitorInfoReq req) (api.post="/api/tools/add_visitor_info")
     CountVisitorResp CountVisitorByPath(1: CountVisitorReq req) (api.get="/api/tools/count_visitor_by_path")
+    FilePostResp FilePost(1: FilePostReq req) (api.post="/api/tools/file_post")
 }
