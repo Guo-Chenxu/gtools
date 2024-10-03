@@ -23,10 +23,11 @@ func main() {
 	dal.Init()
 
 	h := server.Default(server.WithHostPorts(conf.GetConfig().Server.Port))
+	h.GetOptions().MaxRequestBodySize = 100 << 20 // 文件上传限制在100m
 	h.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{"PUT", "PATCH", "POST", "GET", "DELETE", "HEAD", "OPTIONS"},
-		AllowHeaders: []string{"Origin", "Authorization", "Content-Type", "Content-Length", "Accept", "X-Requested-With"},
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"PUT", "PATCH", "POST", "GET", "DELETE", "HEAD", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Content-Type", "Content-Length", "Accept", "X-Requested-With"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
 			return true
