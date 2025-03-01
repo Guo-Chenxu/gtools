@@ -111,6 +111,7 @@ func VisitorInfoFilterMiddleware() app.HandlerFunc {
 				Code: consts.VistorInfoExistError.Code,
 				Msg:  consts.VistorInfoExistError.Msg,
 			})
+			return
 		}
 
 		redis.KeySet(ctx, redisKey, "", consts.RedisVisitorInfoExpireTime)
