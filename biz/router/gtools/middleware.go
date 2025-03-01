@@ -61,7 +61,7 @@ func ReqRespLogMiddleware() app.HandlerFunc {
 func GetIPMiddleware() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		ip := c.Request.Header.Get(consts.X_FORWARDED_FOR)
-		context.WithValue(ctx, consts.X_FORWARDED_FOR, ip)
+		ctx = context.WithValue(ctx, consts.X_FORWARDED_FOR, ip)
 		c.SetClientIPFunc(func(ctx *app.RequestContext) string {
 			return ip
 		})
