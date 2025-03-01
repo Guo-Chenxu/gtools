@@ -12,7 +12,6 @@ import (
 	"gtools/service"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 // SendEmail .
@@ -49,7 +48,6 @@ func AddVisitorInfo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	hlog.Infof("request context ip: %s, ctx ip: %s", c.ClientIP(), ctx.Value(consts.X_FORWARDED_FOR).(string))
 	req.IP = c.ClientIP()
 	resp := new(gtools.AddVisitorInfoResp)
 	if bizErr := service.AddVisitorInfo(ctx, &req); bizErr != nil {
