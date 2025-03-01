@@ -86,14 +86,15 @@ func VisitorInfoFilterMiddleware() app.HandlerFunc {
 				Code: consts.ParamBindJsonError.Code,
 				Msg:  consts.ParamBindJsonError.Msg,
 			})
+			return 
 		}
 
 		if !req[consts.IsVisitorInfoSuccess].(bool) {
 			hlog.CtxErrorf(ctx, "访客信息接口请求不成功 req = %v", req)
-			c.AbortWithStatusJSON(200, handler.BaseResponse{
-				Code: consts.RetParamError.Code,
-				Msg:  consts.RetParamError.Msg,
-			})
+			// c.AbortWithStatusJSON(200, handler.BaseResponse{
+			// 	Code: consts.RetParamError.Code,
+			// 	Msg:  consts.RetParamError.Msg,
+			// })
 		}
 
 		// 判断存在标准：week + ip + location + browser + browser_ver + system + path
