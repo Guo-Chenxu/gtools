@@ -48,6 +48,7 @@ func AddVisitorInfo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+	req.IP = c.ClientIP()
 	resp := new(gtools.AddVisitorInfoResp)
 	if bizErr := service.AddVisitorInfo(ctx, &req); bizErr != nil {
 		base.ErrorResponse(ctx, c, bizErr, false)

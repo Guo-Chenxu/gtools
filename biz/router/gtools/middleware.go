@@ -21,6 +21,7 @@ import (
 func rootMw() []app.HandlerFunc {
 	// your code...
 	return []app.HandlerFunc{
+		GetIPMiddleware(),
 		ReqRespLogMiddleware(),
 	}
 }
@@ -57,6 +58,17 @@ func ReqRespLogMiddleware() app.HandlerFunc {
 	}
 }
 
+func GetIPMiddleware() app.HandlerFunc {
+	return func(ctx context.Context, c *app.RequestContext) {
+		ip := c.Request.Header.Get(consts.X_FORWARDED_FOR)
+		context.WithValue(ctx, consts.X_FORWARDED_FOR, ip)
+		c.SetClientIPFunc(func(ctx *app.RequestContext) string {
+			return ip
+		})
+		c.Next(ctx)
+	}
+}
+
 func _apiMw() []app.HandlerFunc {
 	// your code...
 	return nil
@@ -86,7 +98,7 @@ func VisitorInfoFilterMiddleware() app.HandlerFunc {
 				Code: consts.ParamBindJsonError.Code,
 				Msg:  consts.ParamBindJsonError.Msg,
 			})
-			return 
+			return
 		}
 
 		if !req[consts.IsVisitorInfoSuccess].(bool) {
