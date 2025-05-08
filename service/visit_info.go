@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"gtools/biz/model/gtools"
+	"gtools/conf"
 	"gtools/consts"
 	"gtools/dal/mysql"
 	"gtools/utils"
@@ -13,13 +14,20 @@ import (
 )
 
 func AddVisitorInfo(ctx context.Context, req *gtools.AddVisitorInfoReq) *consts.BizCode {
-	hlog.CtxInfof(ctx, "信息入库")
+	ipInfo, err := utils.GetIPInfo(ctx, req.IP, conf.GetConfig().IPInfo.APIToken)
+	if err != nil {
+		hlog.CtxInfof(ctx, "get ip info failed, err: %v", err)
+		req.Location = "error: " + err.Error()
+	} else {
+		req.Location = strings.Join([]string{ipInfo.Country, ipInfo.Region, ipInfo.City}, ",")
+	}
+
 	tableName := fmt.Sprintf(consts.VisitorInfoMySQLTablePrefix, strings.Replace(req.Domain, ".", "_", -1))
 	return mysql.NewVisitInfoDao().InsertVisitorInfo(ctx, tableName, convertVisitorInfo(req))
 }
 
 func CountVisitorByPath(ctx context.Context, req *gtools.CountVisitorReq) (int64, *consts.BizCode) {
-	tableName := fmt.Sprintf(consts.VisitorInfoMySQLTablePrefix, strings.Replace(req.Domain, ".", "_", -1))   
+	tableName := fmt.Sprintf(consts.VisitorInfoMySQLTablePrefix, strings.Replace(req.Domain, ".", "_", -1))
 	return mysql.NewVisitInfoDao().CountVisitorByPath(ctx, tableName, req.Path)
 }
 
