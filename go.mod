@@ -6,6 +6,7 @@ replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
 
 require (
 	github.com/apache/thrift v0.0.0-00010101000000-000000000000
+	github.com/bytedance/sonic v1.11.6
 	github.com/cloudwego/hertz v0.9.2
 	github.com/google/uuid v1.6.0
 	github.com/hertz-contrib/cors v0.1.0
@@ -20,7 +21,6 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/bytedance/go-tagexpr/v2 v2.9.2 // indirect
 	github.com/bytedance/gopkg v0.0.0-20220413063733-65bf48ffb3a7 // indirect
-	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect

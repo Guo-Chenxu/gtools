@@ -30,18 +30,13 @@ build:
 	go build -o output/$(RUN_NAME) -ldflags "-s -w" -buildvcs=false -race
 	@echo "build success"
 
-# deploy:
-# 	bash -c 'rm -rf output'
-# 	bash -c 'go env -w GOARCH="amd64" GOOS="linux" CGO_ENABLED="0"'
-# 	bash -c 'go env | grep GOOS'
-# 	bash -c 'echo build begin'
-# 	bash -c 'mkdir -p output/conf'
-# 	bash -c 'cp -r conf/* output/conf'
-# 	bash -c 'cp start.sh output'
-# 	bash -c 'go build -o output/$(RUN_NAME) -ldflags "-s -w"'
-# 	bash -c 'echo build success'
-# 	bash -c 'go env -w GOARCH="amd64" GOOS="windows" CGO_ENABLED="1"'
-# 	bash -c 'go env | grep GOOS'
+deploy-win:
+	bash -c 'rm -rf output'
+	bash -c 'mkdir -p output/conf'
+	bash -c 'cp -r conf/* output/conf'
+	bash -c 'cp start.sh output'
+	bash -c 'GOARCH="amd64" GOOS="linux" go build -o output/$(RUN_NAME) -ldflags "-s -w"'
+	bash -c 'echo build success'
 
-# 	rsync -avz --delete ./output/ $(SERVER):~/gtools/
-# 	bash -c 'echo deploy success'
+	rsync -avz --delete ./output/ $(SERVER):~/gtools/
+	@bash -c 'echo deploy success'

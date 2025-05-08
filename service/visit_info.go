@@ -19,7 +19,7 @@ func AddVisitorInfo(ctx context.Context, req *gtools.AddVisitorInfoReq) *consts.
 		hlog.CtxInfof(ctx, "get ip info failed, err: %v", err)
 		req.Location = "error: " + err.Error()
 	} else {
-		req.Location = strings.Join([]string{ipInfo.Country, ipInfo.Region, ipInfo.City}, ",")
+		req.Location = strings.Join([]string{ipInfo.Country, ipInfo.Region, ipInfo.City}, "-")
 	}
 
 	tableName := fmt.Sprintf(consts.VisitorInfoMySQLTablePrefix, strings.Replace(req.Domain, ".", "_", -1))
