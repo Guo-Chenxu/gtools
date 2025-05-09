@@ -21,4 +21,7 @@ mysql:
   password: MYSQL_PASSWORD
   database: gtools
 
+ip_info:
+  api_token: IPINFO_API_TOKEN
+
 strore_path: "./" 

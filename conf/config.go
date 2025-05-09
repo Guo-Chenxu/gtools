@@ -17,6 +17,7 @@ type Config struct {
 	Redis     Redis  `yaml:"redis"`
 	Mysql     Mysql  `yaml:"mysql"`
 	StorePath string `yaml:"store_path"`
+	IPInfo    IPInfo `yaml:"ip_info"`
 }
 
 type Server struct {
@@ -40,6 +41,10 @@ type Mysql struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	Database string `yaml:"database"`
+}
+
+type IPInfo struct {
+	APIToken string `yaml:"api_token"`
 }
 
 // 配置文件路径
@@ -69,6 +74,7 @@ func InitConfig() {
 func readConfigFromEnv() {
 	conf.Redis.Password = os.Getenv(conf.Redis.Password)
 	conf.Mysql.Password = os.Getenv(conf.Mysql.Password)
+	conf.IPInfo.APIToken = os.Getenv(conf.IPInfo.APIToken)
 }
 
 func GetConfig() Config {
