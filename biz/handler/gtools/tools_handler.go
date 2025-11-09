@@ -116,3 +116,26 @@ func FilePost(ctx context.Context, c *app.RequestContext) {
 	resp.Code, resp.Msg, resp.Data = consts.ResSuccess.Code, consts.ResSuccess.Msg, url
 	base.SuccessResponse(c, resp)
 }
+
+// ParseJWT .
+// @router /api/tools/parse_jwt [POST]
+func ParseJWT(ctx context.Context, c *app.RequestContext) {
+	base := handler.BaseHandler{}
+	var err error
+	var req gtools.ParseJWTReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		base.ErrorResponse(ctx, c, &consts.ParamBindJsonError, nil)
+		return
+	}
+
+	resp := new(gtools.ParseJWTResp)
+	data, bizErr := service.ParseJWT(ctx, &req)
+	if bizErr != nil {
+		base.ErrorResponse(ctx, c, bizErr, nil)
+		return
+	}
+
+	resp.Code, resp.Msg, resp.Data = consts.ResSuccess.Code, consts.ResSuccess.Msg, data
+	base.SuccessResponse(c, resp)
+}

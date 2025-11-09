@@ -70,9 +70,28 @@ struct FilePostResp{
     3: string data
 }
 
+struct ParseJWTReq{
+    1: string jwt_token
+    2: optional string secret
+}
+
+struct JWTParseData{
+    1: map<string, string> header
+    2: map<string, string> claims
+    3: bool valid
+    4: string error_msg
+}
+
+struct ParseJWTResp{
+    1: i32 code
+    2: string msg
+    3: JWTParseData data
+}
+
 service ToolsHandler {
     SendEmailResp SendEmail(1: SendEmailReq req) (api.post="/api/tools/send_email")
     AddVisitorInfoResp AddVisitorInfo(1: AddVisitorInfoReq req) (api.post="/api/tools/add_visitor_info")
     CountVisitorResp CountVisitorByPath(1: CountVisitorReq req) (api.get="/api/tools/count_visitor_by_path")
     FilePostResp FilePost(1: FilePostReq req) (api.post="/api/tools/file_post")
+    ParseJWTResp ParseJWT(1: ParseJWTReq req) (api.post="/api/tools/parse_jwt")
 }

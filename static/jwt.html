@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT 解析工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .result-section {
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .result-item {
+            display: flex;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            align-items: flex-start;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-key {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 150px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .result-value {
+            flex: 1;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            position: relative;
+        }
+
+        .timestamp-tooltip {
+            position: absolute;
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .timestamp-tooltip.show {
+            opacity: 1;
+        }
+
+        .timestamp-value {
+            cursor: help;
+            border-bottom: 1px dashed #667eea;
+        }
+
+        .valid-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .valid-badge.success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .valid-badge.error {
+            background: #f44336;
+            color: white;
+        }
+
+        .valid-badge.warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        .error-message {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JWT 解析工具</h1>
+
+        <div class="input-section">
+            <label for="jwtToken">JWT Token:</label>
+            <textarea id="jwtToken" placeholder="粘贴您的 JWT Token 到这里..."></textarea>
+        </div>
+
+        <div class="input-section">
+            <label for="secret">密钥 (可选，用于验证签名):</label>
+            <input type="text" id="secret" placeholder="如果需要验证签名，请输入密钥">
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="parseJWT()">解析 JWT</button>
+            <button class="btn-secondary" onclick="clearAll()">清空</button>
+        </div>
+
+        <div id="errorContainer"></div>
+
+        <div id="resultSection" class="result-section">
+            <div class="result-card">
+                <h3>验证状态</h3>
+                <div id="validationStatus"></div>
+            </div>
+
+            <div class="result-card">
+                <h3>Header (头部)</h3>
+                <div id="headerResult"></div>
+            </div>
+
+            <div class="result-card">
+                <h3>Claims (载荷)</h3>
+                <div id="claimsResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 时间戳字段名列表
+        const TIMESTAMP_FIELDS = ['exp', 'iat', 'nbf', 'auth_time', 'updated_at', 'created_at'];
+
+        async function parseJWT() {
+            const jwtToken = document.getElementById('jwtToken').value.trim();
+            const secret = document.getElementById('secret').value.trim();
+            const errorContainer = document.getElementById('errorContainer');
+            const resultSection = document.getElementById('resultSection');
+
+            errorContainer.innerHTML = '';
+            resultSection.classList.remove('show');
+
+            if (!jwtToken) {
+                showError('请输入 JWT Token');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/tools/parse_jwt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        jwt_token: jwtToken,
+                        secret: secret || undefined
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.code !== 0) {
+                    showError(result.msg || '解析失败');
+                    return;
+                }
+
+                displayResult(result.data);
+            } catch (error) {
+                showError('请求失败: ' + error.message);
+            }
+        }
+
+        function displayResult(data) {
+            const resultSection = document.getElementById('resultSection');
+            const validationStatus = document.getElementById('validationStatus');
+            const headerResult = document.getElementById('headerResult');
+            const claimsResult = document.getElementById('claimsResult');
+
+            // 显示验证状态
+            let statusBadge = '';
+            if (data.valid) {
+                statusBadge = '<span class="valid-badge success">✓ 签名验证通过</span>';
+            } else if (data.error_msg && data.error_msg.includes('no secret provided')) {
+                statusBadge = '<span class="valid-badge warning">⚠ 未验证签名 (未提供密钥)</span>';
+            } else {
+                statusBadge = '<span class="valid-badge error">✗ 签名验证失败</span>';
+            }
+
+            if (data.error_msg) {
+                statusBadge += `<div style="margin-top: 10px; color: #666;">${escapeHtml(data.error_msg)}</div>`;
+            }
+
+            validationStatus.innerHTML = statusBadge;
+
+            // 显示 Header
+            headerResult.innerHTML = renderObject(data.header);
+
+            // 显示 Claims
+            claimsResult.innerHTML = renderObject(data.claims);
+
+            resultSection.classList.add('show');
+        }
+
+        function renderObject(obj) {
+            if (!obj || Object.keys(obj).length === 0) {
+                return '<div style="color: #999; padding: 10px;">无数据</div>';
+            }
+
+            let html = '';
+            for (const [key, value] of Object.entries(obj)) {
+                const isTimestamp = TIMESTAMP_FIELDS.includes(key) && isNumericTimestamp(value);
+                const displayValue = isTimestamp
+                    ? createTimestampElement(key, value)
+                    : escapeHtml(value);
+
+                html += `
+                    <div class="result-item">
+                        <div class="result-key">${escapeHtml(key)}:</div>
+                        <div class="result-value" id="value-${key}">${displayValue}</div>
+                    </div>
+                `;
+            }
+            return html;
+        }
+
+        function isNumericTimestamp(value) {
+            // 检查是否为纯数字字符串且长度合理（9-13位，对应秒或毫秒级时间戳）
+            return /^\d{9,13}$/.test(value);
+        }
+
+        function createTimestampElement(key, timestamp) {
+            // 使用BigInt或字符串处理保证精度
+            const timestampValue = timestamp.toString();
+            const date = new Date(parseInt(timestampValue) * 1000); // JWT时间戳通常是秒级
+            const utc8Date = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+            const formattedDate = utc8Date.toISOString().replace('T', ' ').substring(0, 19) + ' (UTC+8)';
+
+            return `
+                <span class="timestamp-value"
+                      onmouseenter="showTooltip(event, '${formattedDate}')"
+                      onmouseleave="hideTooltip(event)">
+                    ${escapeHtml(timestampValue)}
+                </span>
+            `;
+        }
+
+        function showTooltip(event, text) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'timestamp-tooltip show';
+            tooltip.textContent = text;
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY - 30) + 'px';
+            tooltip.id = 'tooltip-' + Date.now();
+
+            document.body.appendChild(tooltip);
+            event.target.tooltipId = tooltip.id;
+        }
+
+        function hideTooltip(event) {
+            if (event.target.tooltipId) {
+                const tooltip = document.getElementById(event.target.tooltipId);
+                if (tooltip) {
+                    tooltip.remove();
+                }
+            }
+        }
+
+        function showError(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `<div class="error-message">${escapeHtml(message)}</div>`;
+        }
+
+        function clearAll() {
+            document.getElementById('jwtToken').value = '';
+            document.getElementById('secret').value = '';
+            document.getElementById('errorContainer').innerHTML = '';
+            document.getElementById('resultSection').classList.remove('show');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

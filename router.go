@@ -3,14 +3,29 @@
 package main
 
 import (
+	"context"
 	handler "gtools/biz/handler"
+	"gtools/static"
 
+	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 // customizeRegister registers customize routers.
 func customizedRegister(r *server.Hertz) {
 	r.GET("/ping", handler.Ping)
+
+	// JWT 解析工具页面
+	r.GET("/jwt", func(ctx context.Context, c *app.RequestContext) {
+		data, err := static.StaticFS.ReadFile("jwt.html")
+		if err != nil {
+			c.String(consts.StatusNotFound, "Page not found")
+			return
+		}
+		c.Header("Content-Type", "text/html; charset=utf-8")
+		c.Write(data)
+	})
 
 	// your code ...
 }

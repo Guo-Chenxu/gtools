@@ -145,3 +145,8 @@ func _filepostMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _parsejwtMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
